@@ -3,7 +3,8 @@
     "logo": {
         "source": "$(find \"${XDG_CONFIG_HOME:-$HOME/.config}/fastfetch/pngs/\" -name \"*.png\" | shuf -n 1)",
         //"source": "$(find \"${XDG_CONFIG_HOME:-$HOME/.config}/fastfetch/pngs/minakami_yuki.png\" | shuf -n 1)",
-        "height": 18
+        "height": 18,
+        "type" : "kitty"
     },
     "display": {
         "separator": " : "
@@ -48,6 +49,11 @@
             "keyColor": "yellow"
         },
         {
+            "type": "shell",
+            "key": "   Shell",
+            "keyColor": "blue", 
+        },
+        {
             "type": "custom",
             "format": "└──────────────────────────────────────────┘"
         },
@@ -79,10 +85,25 @@
             "keyColor": "magenta"
         },
         {
-             "type": "memory",
+            "type": "memory",
             "key": "  ﬙ Memory",
             "keyColor": "magenta"
-        },      
+        },
+        {
+           "type": "swap",
+           "key": "  ﬙ Swap",
+           "keyColor": "magenta"
+        },
+        {
+            "type" : "disk",
+            "key": "  󰋊 Disk",
+            "keyColor": "green"
+        },   
+        {
+            "type" : "physicaldisk",
+            "key": "  󰋊 Physical Disk",
+            "keyColor": "green"
+        }, 
         {
             "type": "command",
             "key": "  󱦟 OS Age ",
