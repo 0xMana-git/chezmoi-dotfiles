@@ -43,8 +43,17 @@ export_init() {
   export _USERNAME="$USERNAME"
   export _DEFAULT_USER="$DEFAULT_USER"
   export _UID="$UID"
+  setopt promptsubst
+  autoload -Uz vcs_info
+  zstyle ':vcs_info:*' enable git
+  zstyle ':vcs_info:*' get-revision true
+  zstyle ':vcs_info:*' check-for-changes true
+  zstyle ':vcs_info:*' stagedstr '✚'
+  zstyle ':vcs_info:*' unstagedstr '±'
+  zstyle ':vcs_info:*' formats ' %u%c'
+  zstyle ':vcs_info:*' actionformats ' %u%c'
+  #vcs_info
 }
-
 
 export_update() {
   export _RETVAL=$?
@@ -53,16 +62,17 @@ export_update() {
 purge_promptgen_cache() {
   rm -rf $BUILDPROMPT_CACHE_DIR
   mkdir -p $BUILDPROMPT_CACHE_DIR
+  recompile_promptgen
 }
 
 recompile_promptgen() {
-  g++ $SRC_PATH -std=c++23 -o $BUILDPROMPT_BIN -Wno-ignored-attributes -O3
+  g++ $SRC_PATH -std=c++23 -o $BUILDPROMPT_BIN -Wno-ignored-attributes -O3 /usr/lib/libgit2.so 
 }
 
 recompile_if_needed() {
   mkdir -p $BUILDPROMPT_CACHE_DIR
   #TODO: checksum entire dir(if there is a usecase lol)
-  SOURCE_CHECKSUM=$(sha256sum $SRC_PATH)
+  SOURCE_CHECKSUM=$(md5sum $SRC_PATH)
   #echo $SOURCE_CHECKSUM
   BUILDPROMPT_BIN="$BUILDPROMPT_CACHE_DIR""${SOURCE_CHECKSUM:0:16}"
   if [ ! -f $BUILDPROMPT_BIN ]; then
@@ -78,6 +88,9 @@ init_theme() {
 ## Main prompt
 build_prompt() {
   export _RETVAL=$?
+  vcs_info
+  export _VCS_INFO_MSG_0="${vcs_info_msg_0_%%}"
+  
   echo $("$BUILDPROMPT_BIN")
 }
 

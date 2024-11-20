@@ -150,6 +150,8 @@ prompt_git() {
     zstyle ':vcs_info:*' formats ' %u%c'
     zstyle ':vcs_info:*' actionformats ' %u%c'
     vcs_info
+
+    #echo ${${ref:gs/%/%%}/refs\/heads\//$PL_BRANCH_CHAR }
     echo -n "${${ref:gs/%/%%}/refs\/heads\//$PL_BRANCH_CHAR }${vcs_info_msg_0_%% }${mode}"
   fi
 }
@@ -185,7 +187,6 @@ prompt_status() {
 ## Main prompt
 build_prompt() {
   export RETVAL=$?
-  echo $RETVAL
   prompt_status
   prompt_virtualenv
   prompt_context
