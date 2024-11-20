@@ -66,7 +66,8 @@ purge_promptgen_cache() {
 }
 
 recompile_promptgen() {
-  g++ $SRC_PATH -std=c++23 -o $BUILDPROMPT_BIN -Wno-ignored-attributes -O3 /usr/lib/libgit2.so 
+  g++ $SRC_PATH -std=c++23 -o $BUILDPROMPT_BIN -Wno-ignored-attributes -O3
+  # /usr/lib/libgit2.so 
 }
 
 recompile_if_needed() {
