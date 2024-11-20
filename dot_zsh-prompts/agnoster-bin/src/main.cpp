@@ -6,7 +6,7 @@
 
 using string = std::string;
 
-
+//#define USE_LIBGIT
 
 #include <cstdio>
 #include <iostream>
@@ -15,10 +15,16 @@ using string = std::string;
 #include <string>
 #include <array>
 #include <filesystem>
+
+
+#ifdef USE_LIBGIT
 #include <git2.h>
+#endif
 
 
-constexpr bool USE_LIBGIT = false;
+
+
+
 
 std::string exec_command(const std::string& cmd) {
     std::array<char, 128> buffer;
@@ -69,8 +75,10 @@ constexpr string context_bg = "24";
 
 void init() {
     CURRENT_FG = "black";
-    if(USE_LIBGIT)
-        git_libgit2_init();
+    
+#ifdef USE_LIBGIT
+    git_libgit2_init();
+#endif
 }
 
 
@@ -118,20 +126,19 @@ inline string prompt_git() {
     
     // if(!std::filesystem::exists(".git"))
     //     return "";
-    git_repository *repo = nullptr;
+    //
     string mode, ref, repo_path, ahead = "", behind = "";;
-
-    if(USE_LIBGIT) {
-        
+    
+    #ifdef USE_LIBGIT
+        git_repository *repo = nullptr;
         int error = git_repository_open(&repo, ".");
         if(error < 0)
             return "";
-    } else {
+    #else
         repo_path = exec_command("git rev-parse --git-dir 2>/dev/null");
-        if(repo_path.size() == 0) {
+        if(repo_path.size() == 0) 
             return "";
-    }
-    }
+    #endif
     
 
     string res = prompt_segment("green", CURRENT_FG);
@@ -152,15 +159,15 @@ inline string prompt_git() {
     
     //string ahead = exec_command("git log --oneline @{upstream}.. 2>/dev/null");
     //string behind = exec_command("git log --oneline ..@{upstream} 2>/dev/null");
-    if(USE_LIBGIT) {
+    #ifdef USE_LIBGIT
         git_reference* git_ref_outer, *git_ref;
-        int error = git_reference_lookup(&git_ref_outer, repo, "HEAD");
+        error = git_reference_lookup(&git_ref_outer, repo, "HEAD");
 
         error = git_reference_resolve(&git_ref, git_ref_outer);
         ref = git_reference_name(git_ref);
-    } else {
+    #else
         ref = exec_command("git symbolic-ref HEAD 2> /dev/null");
-    }
+    #endif
    
     ref = ref.size() != 0 ? ref : "◈ " + exec_command("git descriexport_initbe --exact-match --tags HEAD 2> /dev/null");
     ref = ref.size() != 0 ? ref : "➦ " + exec_command("git rev-parse --short HEAD 2> /dev/null");
