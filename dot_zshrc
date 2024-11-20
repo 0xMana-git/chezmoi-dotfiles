@@ -19,5 +19,6 @@ autoload -U compinit; compinit
 
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh 
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
-source ~/.zsh-prompts/agnoster-mod.zsh-theme
+export PROMPT_THEME_ROOT=$HOME'/.zsh-prompts/agnoster-bin'
+#source ~/.zsh-prompts/agnoster-mod.zsh-theme
+source "$PROMPT_THEME_ROOT"'/theme.zsh'

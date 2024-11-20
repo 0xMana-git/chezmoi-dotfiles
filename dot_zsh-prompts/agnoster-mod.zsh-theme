@@ -184,7 +184,8 @@ prompt_status() {
 
 ## Main prompt
 build_prompt() {
-  RETVAL=$?
+  export RETVAL=$?
+  echo $RETVAL
   prompt_status
   prompt_virtualenv
   prompt_context
